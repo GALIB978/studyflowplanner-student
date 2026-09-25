@@ -59,7 +59,7 @@ export function TaskDialog({ open, onOpenChange, task }: Props) {
   }, [open, task]);
 
   function submit() {
-    const next: Record<string, string> = {};
+    const next: { title?: string; subject?: string; dueDate?: string } = {};
     if (!form.title.trim()) next.title = "Please enter a task title.";
     if (!form.subject.trim()) next.subject = "Please enter a subject.";
     if (!form.dueDate) next.dueDate = "Please choose a due date.";

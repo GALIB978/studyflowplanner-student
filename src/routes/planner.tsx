@@ -40,7 +40,12 @@ function PlannerPage() {
   const { sessions, addSession, deleteSession } = useStudyFlow();
   const [weekOffset, setWeekOffset] = useState(0);
   const [form, setForm] = useState(emptyForm);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{
+    subject?: string;
+    date?: string;
+    start?: string;
+    end?: string;
+  }>({});
 
   const days = useMemo(() => {
     const base = startOfWeek(weekOffset);
@@ -52,7 +57,7 @@ function PlannerPage() {
   }, [weekOffset]);
 
   function submit() {
-    const next: Record<string, string> = {};
+    const next: { subject?: string; date?: string; start?: string; end?: string } = {};
     if (!form.subject.trim()) next.subject = "Subject is required.";
     if (!form.date) next.date = "Date is required.";
     if (!form.start) next.start = "Start time is required.";
