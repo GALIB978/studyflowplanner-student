@@ -32,9 +32,12 @@ const empty = { title: "", subject: "", description: "", dueDate: "", priority: 
 export function TaskDialog({ open, onOpenChange, task }: Props) {
   const { addTask, updateTask, tasks } = useStudyFlow();
   const [form, setForm] = useState(empty);
-  type FieldErrors = { title?: string; subject?: string; dueDate?: string };
+  const [errors, setErrors] = useState<{
+    title?: string;
+    subject?: string;
+    dueDate?: string;
+  }>({});
 
-function TaskDialogInner() {}
 
 
   const subjects = Array.from(new Set(tasks.map((t) => t.subject))).sort();
