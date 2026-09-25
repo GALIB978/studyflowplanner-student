@@ -5,60 +5,21 @@ import {
   CheckCircle2,
   LayoutDashboard,
   ListChecks,
-  Menu,
   Moon,
   Plus,
   Sun,
   TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useStudyFlow } from "@/lib/studyflow/store";
 import { TaskDialog } from "./TaskDialog";
-import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/tasks", label: "Tasks", icon: ListChecks },
-  { to: "/planner", label: "Study Planner", icon: CalendarRange },
+  { to: "/planner", label: "Planner", icon: CalendarRange },
   { to: "/progress", label: "Progress", icon: TrendingUp },
 ] as const;
-
-function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
-  return (
-    <nav className="grid gap-1">
-      {nav.map(({ to, label, icon: Icon }) => (
-        <Link
-          key={to}
-          to={to}
-          onClick={onNavigate}
-          activeOptions={{ exact: to === "/" }}
-          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          activeProps={{
-            className: "bg-sidebar-primary/10 text-sidebar-primary hover:bg-sidebar-primary/15",
-          }}
-        >
-          <Icon className="size-4" />
-          {label}
-        </Link>
-      ))}
-    </nav>
-  );
-}
-
-function Brand() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-        <CheckCircle2 className="size-5" />
-      </span>
-      <span className="leading-tight">
-        <span className="block font-display text-base font-semibold">StudyFlow</span>
-        <span className="block text-xs text-muted-foreground">Study Planner</span>
-      </span>
-    </div>
-  );
-}
 
 export function AppShell({
   title,
@@ -71,57 +32,75 @@ export function AppShell({
 }) {
   const { theme, toggleTheme } = useStudyFlow();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background lg:flex">
-      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar lg:flex lg:flex-col lg:gap-6 lg:p-5">
-        <Brand />
-        <NavLinks />
-        <div className="mt-auto rounded-xl bg-sidebar-accent/60 p-4 text-xs text-muted-foreground">
-          Your tasks and study sessions are saved in this browser, so they stay after a refresh.
-        </div>
-      </aside>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/85 px-4 py-3 backdrop-blur sm:px-6">
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation">
-                <Menu className="size-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 bg-sidebar p-5">
-              <div className="mb-6">
-                <Brand />
-              </div>
-              <NavLinks onNavigate={() => setMobileOpen(false)} />
-            </SheetContent>
-          </Sheet>
-
-          <div className="min-w-0 flex-1">
-            <h1 className="truncate text-lg font-semibold sm:text-xl">{title}</h1>
-            {subtitle && (
-              <p className="hidden truncate text-sm text-muted-foreground sm:block">{subtitle}</p>
-            )}
+    <div className="app-backdrop min-h-screen px-3 py-5 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-5xl">
+        {/* Brand header */}
+        <header className="surface-card overflow-hidden">
+          <div className="flex items-center gap-3 px-5 py-5 sm:px-8 sm:py-6">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-soft)]">
+              <CheckCircle2 className="size-6" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-2xl font-semibold leading-none sm:text-3xl">
+                StudyFlow
+              </p>
+              <p className="mt-1 truncate text-xs text-muted-foreground sm:text-sm">
+                Study planner & task manager
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="shrink-0 rounded-full"
+            >
+              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </Button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className="shrink-0"
-          >
-            {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
-          </Button>
-          <Button onClick={() => setDialogOpen(true)} className="shrink-0">
-            <Plus className="size-4" />
-            <span className={cn("hidden sm:inline")}>Add Task</span>
-          </Button>
+          <nav className="border-t border-border bg-muted/50 px-2 py-2 sm:px-6">
+            <ul className="grid grid-cols-4 gap-1 sm:flex sm:justify-center sm:gap-2">
+              {nav.map(({ to, label, icon: Icon }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    activeOptions={{ exact: to === "/" }}
+                    className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground sm:flex-row sm:gap-2 sm:px-4 sm:text-sm"
+                    activeProps={{
+                      className: "bg-card text-primary shadow-[var(--shadow-soft)] hover:text-primary",
+                    }}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </header>
 
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+        {/* Page title + primary action */}
+        <div className="mt-8 flex flex-col gap-4 px-1 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-3xl font-semibold sm:text-4xl">{title}</h1>
+            {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+          </div>
+          <Button onClick={() => setDialogOpen(true)} size="lg" className="shrink-0 rounded-xl">
+            <Plus className="size-4" />
+            Add Task
+          </Button>
+        </div>
+
+        <main className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          {children}
+        </main>
+
+        <footer className="mt-12 pb-4 text-center text-xs text-muted-foreground">
+          StudyFlow · Your tasks and sessions are saved in this browser.
+        </footer>
       </div>
 
       <TaskDialog open={dialogOpen} onOpenChange={setDialogOpen} />

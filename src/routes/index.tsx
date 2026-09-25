@@ -59,8 +59,8 @@ function Dashboard() {
     .sort((a, b) => a.start.localeCompare(b.start));
 
   return (
-    <AppShell title="Dashboard" subtitle={`Today is ${formatDate(today)}`}>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <AppShell title="Welcome back" subtitle={`Today is ${formatDate(today)} · here is your study overview`}>
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total tasks" value={tasks.length} icon={ListChecks} />
         <StatCard label="Completed" value={completed} icon={CheckCircle2} />
         <StatCard label="Pending" value={pending} icon={Clock} />
